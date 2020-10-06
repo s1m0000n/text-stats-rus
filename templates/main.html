@@ -16,10 +16,30 @@
                 <button id="process_btn" class="btn btn-primary" onclick="
                     $.ajax({url: 'process', datatype: 'text', data: $('#textarea').val(),
                         success: function(data) {
-                            document.getElementById('results').innerHTML  = '<p>TEXT PROCESSING RESULTS</p>'
-                     }})">Обработать</button>
+                            document.getElementById('results').hidden = false
+                            for(var key in data){
+                                document.getElementById(key).innerHTML = data[key];
+                            }
+                     }})">Обработать
+                </button>
             </div>
-            <div id="results"></div>
+            <div id="results" hidden>
+                <div id="stats" class="mt-2">
+                    <h3>Статистические данные</h3>
+                    <div id="gen_stat" class="mt-2">
+                        <h5>Общая статистика</h5>
+                        <div id="gen_stat_data"></div>
+                    </div>
+                </div>
+                <div id="morph_analysis" class="mt-2">
+                    <h3>Морфологический анализ</h3>
+                    <div id="morph_analysis_table"></div>
+                    <div class="mt-2">
+                        <a href="https://github.com/olesar/ruUD/blob/master/conversion/RussianUD_XPOSlist.md">Теги
+                            частей речи согласно Universal Dependencies</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
