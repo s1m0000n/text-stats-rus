@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
@@ -10,6 +10,8 @@ def hello_world():
 
 @app.route('/process')
 def process():
+    text = tuple(request.args.items())[0][0]
+    print(text)
     return jsonify({'sample': 'sample_result'})
 
 
