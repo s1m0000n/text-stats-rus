@@ -14,7 +14,9 @@ def process():
     text = tuple(request.args.items())[0][0]
     tp = HtmlTP(text)
     return jsonify({'morph_analysis_table': tp.morhp_analysis(include_punct=True),
-                    'gen_stat_data': tp.gen_stats()})
+                    'gen_stat_data': tp.gen_stats(),
+                    'pos_stat_table': tp.pos_freq(),
+                    'pos_stat_graph': tp.pos_freq_graph()})
 
 
 if __name__ == '__main__':

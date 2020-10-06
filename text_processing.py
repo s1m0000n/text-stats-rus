@@ -25,3 +25,6 @@ class TextProcessing:
 
     def total_word_usages(self):
         return len(self.words)
+
+    def pos_percent(self, pos):
+        return round(100 * (len(list(filter(lambda dt: dt.pos == pos, self.words)))/len(self.words)))
