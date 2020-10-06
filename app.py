@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
@@ -8,6 +8,10 @@ def hello_world():
     return render_template('main.html')
 
 
+@app.route('/process')
+def process():
+    return jsonify({'sample': 'sample_result'})
+
+
 if __name__ == '__main__':
     app.run()
-

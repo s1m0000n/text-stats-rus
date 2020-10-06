@@ -7,13 +7,19 @@
 
 <div class="container">
     <div class="jumbotron jumbotron-fluid" style="background: rgba(255,255,255,0)">
-        <div class="container">
+        <div class="container" id="sub_main_container">
             <h1 class="display-4">Статистический анализ текста</h1>
             <label for="textarea" class="lead">Введите ваш текст</label>
-            <textarea class="form-control" id="textarea" rows="4"></textarea>
-            <div class="d-flex justify-content-end mt-2" onclick="">
-                <button class="btn btn-primary">Обработать</button>
+            <textarea class="form-control" id="textarea" rows="4"
+                      placeholder="Предрассветная дымка нехотя отступала по оврагам. Последние капли сна упали в чашку ароматного кофе..."></textarea>
+            <div class="d-flex justify-content-end mt-2">
+                <button id="process_btn" class="btn btn-primary" onclick="
+                    $.ajax({url: 'process', datatype: 'text', data: $('#textarea').val(),
+                        success: function(data) {
+                            document.getElementById('results').innerHTML  = '<p>TEXT PROCESSING RESULTS</p>'
+                     }})">Обработать</button>
             </div>
+            <div id="results"></div>
         </div>
     </div>
 </div>
