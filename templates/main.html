@@ -24,19 +24,41 @@
                 </button>
             </div>
             <div id="results" hidden>
-                <div id="stats" class="mt-2">
+                <div id="stats" class="mt-4">
                     <h3>Статистические данные</h3>
                     <div id="gen_stat" class="mt-2">
                         <h5>Общая статистика</h5>
                         <div id="gen_stat_data"></div>
+                        <h6>Включая знаки препинания и незнакомые слова:</h6>
+                        <div id="gen_stat_data_with_punct"></div>
+                        <h6>Без знаков препинания и незнакомых слов:</h6>
+                        <div id="gen_stat_data_wo_punct"></div>
                     </div>
                     <div id="pos_stat" class="mt-2">
                         <h5>Частотный анализ по частям речи</h5>
                         <div id="pos_stat_table"></div>
-                        <div id="pos_stat_graph"></div>
+                        <div id="pos_stat_graph_uses"></div>
+                        <div id="pos_stat_graph_words"></div>
+                    </div>
+                    <div id="omon_stat" class="mt-2">
+                        <h5>Частотный анализ омонимичных словоформ</h5>
+                        <p>10 самых частотых, без знаков препинания и незнакомых слов</p>
+                        <h6>Включая стоп-слова</h6>
+                        <div id="omon_stat_table"></div>
+                        <h6>Без стоп-слов</h6>
+                        <div id="omon_stat_table_wo_stopwords"></div>
+                    </div>
+                    <div id="case_analysis">
+                        <h5>Частотный анализ падежей существительных и прилагательных</h5>
+                        <div id="case_analysis_table"></div>
+                        <div class="d-flex">
+                            <div id="case_analysis_graph_nouns"></div>
+                        <div id="case_analysis_graph_adjs"></div>
+                        </div>
+
                     </div>
                 </div>
-                <div id="morph_analysis" class="mt-2">
+                <div id="morph_analysis" class="mt-4">
                     <h3>Морфологический анализ</h3>
                     <div id="morph_analysis_table"></div>
                     <div class="mt-2">
