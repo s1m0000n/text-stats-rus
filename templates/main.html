@@ -13,19 +13,27 @@
             <textarea class="form-control" id="textarea" rows="4"
                       placeholder="Предрассветная дымка нехотя отступала по оврагам. Последние капли сна упали в чашку ароматного кофе..."></textarea>
             <div class="d-flex justify-content-end mt-2">
-                <button id="process_btn" class="btn btn-primary" onclick="
-                    $.ajax({url: 'process', datatype: 'text', data: $('#textarea').val(),
+                <button id="process_btn" class="btn btn-primary" onclick='
+                this_btn = document.getElementById("process_btn")
+                this_btn.hidden = true
+                document.getElementById("progress_bar").hidden = false
+                    $.ajax({url: "process", datatype: "text", data: $("#textarea").val(),
                         success: function(data) {
-                            document.getElementById('results').hidden = false
+                            document.getElementById("results").hidden = false
                             for(var key in data){
                                 document.getElementById(key).innerHTML = data[key];
+                            this_btn.hidden = false
+                            document.getElementById("progress_bar").hidden = true
                             }
-                     }})">Обработать
+                     }})'>Обработать
                 </button>
+                <div id="progress_bar" hidden><div class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div></div>
             </div>
             <div id="results" hidden>
                 <div id="stats" class="mt-4">
-                    <h3>Статистические данные</h3>
+                    <h3>Статистический анализ</h3>
                     <div id="gen_stat" class="mt-2">
                         <h5>Общая статистика</h5>
                         <div id="gen_stat_data"></div>
@@ -36,6 +44,7 @@
                     </div>
                     <div id="pos_stat" class="mt-2">
                         <h5>Частотный анализ по частям речи</h5>
+                        <p>Без знаков препинания и незнакомых слов</p>
                         <div id="pos_stat_table"></div>
                         <div id="pos_stat_graph_uses"></div>
                         <div id="pos_stat_graph_words"></div>
@@ -50,12 +59,33 @@
                     </div>
                     <div id="case_analysis">
                         <h5>Частотный анализ падежей существительных и прилагательных</h5>
+                        <p>abs - абсолютная частота, rel - относительная частота</p>
                         <div id="case_analysis_table"></div>
+                        <div id="case_analysis_graph_sum"></div>
                         <div class="d-flex">
                             <div id="case_analysis_graph_nouns"></div>
-                        <div id="case_analysis_graph_adjs"></div>
+                            <div id="case_analysis_graph_adjs"></div>
                         </div>
-
+                    </div>
+                    <div id="verb_forms_analysis">
+                        <h5>Частотный анализ форм глаголов</h5>
+                        <h6>По времени</h6>
+                        <div id="verb_forms_analysis_tense_table"></div>
+                        <h6>По лицу</h6>
+                        <div id="verb_forms_analysis_person_table"></div>
+                        <h6>По числу</h6>
+                        <div id="verb_forms_analysis_number_table"></div>
+                    </div>
+                </div>
+                <div id="other">
+                    <h3>Прочие данные о тексте</h3>
+                    <div id="summarization">
+                        <h5>Топ 10 самых информативных предложений</h5>
+                        <p>На основе частотности лемм</p>
+                        <div id="top_sents"></div>
+                        <h5>Простейший квазиреферат</h5>
+                        <p>15% предложений текста, на основе частотности лемм</p>
+                        <p id="summ_text"></p>
                     </div>
                 </div>
                 <div id="morph_analysis" class="mt-4">
