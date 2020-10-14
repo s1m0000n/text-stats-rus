@@ -5,6 +5,16 @@
       integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <body>
 
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+
 <div class="container">
     <div class="jumbotron jumbotron-fluid" style="background: rgba(255,255,255,0)">
         <div class="container" id="sub_main_container">
@@ -21,18 +31,15 @@
                 document.getElementById("progress_bar").hidden = false
                     $.ajax({url: "process", datatype: "text", data: $("#textarea").val(),
                         success: function(data) {
-                        if ("info_field" in data){
-                            for(var key in data){
+                        for(var key in data){
                                 document.getElementById(key).innerHTML = data[key];
                             }
+                        if ("info_field" in data){
                             document.getElementById("results").hidden = true
                             this_btn.hidden = false
                             document.getElementById("progress_bar").hidden = true
                         } else {
                             document.getElementById("results").hidden = false
-                            for(var key in data){
-                                document.getElementById(key).innerHTML = data[key];
-                            }
                             document.getElementById("info_field").innerHTML = ""
                             this_btn.hidden = false
                             document.getElementById("progress_bar").hidden = true
@@ -46,6 +53,7 @@
                 </div>
             </div>
             <div id="results" hidden>
+                <h3 class="mt-2" hidden id="stat_analysis_label">Статистический анализ</h3>
                 <div id="stats" class="mt-4">
                     <div id="gen_stat" class="mt-2">
                         <h5>Общая статистика</h5>
@@ -91,13 +99,63 @@
                     </div>
                 </div>
                 <div id="other">
-                    <div id="summarization">
-                        <h5>Статистический квазиреферат</h5>
-                        <p>Топ 20% предложений текста, на основе частотности лемм</p>
-                        <p id="summ_text"></p>
-                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary" id="print_stats_btn" onclick="
+                    document.getElementById('print_stats_btn').hidden=true;
+                    document.getElementById('stat_analysis_label').hidden=false;
+                    printDiv('results');
+                    document.getElementById('stat_analysis_label').hidden=true;
+                    document.getElementById('print_stats_btn').hidden=false;">Сохранить в PDF/Печать
+                    </button>
                 </div>
             </div>
+
+            <div id="summarization" class="mt-2">
+                <h3>Квазиреферат</h3>
+                <p>Топ 20% предложений текста, на основе частотности лемм</p>
+                <div class="d-flex justify-content-end mt-2">
+                    <button id="generate_summary_button" class="btn btn-primary" onclick='
+                        document.getElementById("generate_summary_spinner").hidden = false
+                        document.getElementById("generate_summary_button").hidden = true
+                                            $.ajax({url: "summary", datatype: "text", data: $("#textarea").val(),
+                        success: function(data) {
+                                    for(var key in data){
+                                    document.getElementById(key).innerHTML = data[key];
+                                }
+                            if ("info_field" in data){
+                                document.getElementById("summ_text").hidden = true;
+                                document.getElementById("generate_summary_spinner").hidden = true;
+                                document.getElementById("generate_summary_button").hidden = false;
+                                document.getElementById("print_summ").hidden = true;
+                            }
+                            else {
+                                document.getElementById("summ_text").hidden = false;
+                                document.getElementById("generate_summary_spinner").hidden = true;
+                                document.getElementById("generate_summary_button").hidden = false;
+                                document.getElementById("info_field").innerHTML = "";
+                                document.getElementById("print_summ").hidden = false;
+                            }
+                     }})'>Сгенерировать
+                    </button>
+                    <div id="generate_summary_spinner" hidden>
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <p id="summ_text" class="mt-2"></p>
+                <div class="d-flex justify-content-end mt-2">
+                    <button id="print_summ" hidden class="btn btn-primary" onclick="
+                    document.getElementById('generate_summary_button').hidden = true;
+                    document.getElementById('print_summ').hidden=true;
+                    printDiv('summarization');
+                    document.getElementById('print_summ').hidden=false;
+                    document.getElementById('generate_summary_button').hidden = false;">Сохранить в PDF/Печать
+                    </button>
+                </div>
+            </div>
+
             <div id="morph_analysis" class="mt-4">
                 <h3>Морфологический анализ</h3>
                 <div class="d-flex justify-content-end mt-2">
@@ -106,22 +164,21 @@
                         document.getElementById("generate_morph").hidden = true
                                             $.ajax({url: "morph", datatype: "text", data: $("#textarea").val(),
                         success: function(data) {
-                            if ("info_field" in data){
-                                for(var key in data){
-                                    document.getklementById(key).innerHTML = data[key];
+                                   for(var key in data){
+                                    document.getElementById(key).innerHTML = data[key];
                                 }
+                            if ("info_field" in data){
                                 document.getElementById("morph_analysis_table").hidden = true
                                 document.getElementById("morph_generation_spinner").hidden = true
                                 document.getElementById("generate_morph").hidden = false
+                                document.getElementById("print_morph").hidden = true;
                             }
                             else {
-                                for(var key in data){
-                                    document.getElementById(key).innerHTML = data[key];
-                                }
                                 document.getElementById("morph_analysis_table").hidden = false
                                 document.getElementById("morph_generation_spinner").hidden = true
                                 document.getElementById("generate_morph").hidden = false
                                 document.getElementById("info_field").innerHTML = ""
+                                document.getElementById("print_morph").hidden = false;
                             }
                      }})'>Сгенерировать таблицу
                     </button>
@@ -131,12 +188,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="d-flex justify-content-end mt-2">
+                <button class="btn btn-primary" hidden id="print_morph" onclick="
+                    document.getElementById('print_morph').hidden = true;
+                    document.getElementById('generate_morph').hidden = true;
+                    printDiv('morph_analysis');
+                    document.getElementById('print_morph').hidden = false;
+                    document.getElementById('generate_morph').hidden = false;">Сохранить в PDF/Печать
+                </button>
+            </div>
                 <div id="morph_analysis_table" class="mt-2"></div>
                 <div class="mt-2">
                     <a href="https://github.com/olesar/ruUD/blob/master/conversion/RussianUD_XPOSlist.md">Теги
                         частей речи согласно Universal Dependencies</a>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

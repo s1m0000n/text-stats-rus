@@ -1,5 +1,3 @@
-# from multiprocessing import Pool
-
 from flask import Flask, render_template, jsonify, request
 
 from wrappers_tp import HtmlTP
@@ -35,7 +33,6 @@ def process():
                         'verb_forms_analysis_tense_table': tp.verb_form_analysis_tense_table(),
                         'verb_forms_analysis_person_table': tp.verb_form_analysis_person_table(),
                         'verb_forms_analysis_number_table': tp.verb_form_analysis_number_table(),
-                        'summ_text': tp.summary(),
                         })
 
 
@@ -48,6 +45,17 @@ def morph():
     else:
         tp = HtmlTP(text)
         return jsonify({'morph_analysis_table': tp.morhp_analysis(include_punct=True)})
+
+
+@app.route('/summary')
+def summary():
+    try:
+        text = tuple(request.args.items())[0][0]
+    except IndexError:
+        return jsonify({'info_field': 'Пожалуйста, введите текст'})
+    else:
+        tp = HtmlTP(text)
+        return jsonify({'summ_text': tp.summary()})
 
 
 if __name__ == '__main__':
