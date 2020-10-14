@@ -14,11 +14,13 @@ def hello_world():
 
 @app.route('/process')
 def process():
-    text = tuple(request.args.items())[0][0]
-    tp = HtmlTP(text)
-    if text != '':
-        return jsonify({'morph_analysis_table': tp.morhp_analysis(include_punct=True),
-                        'gen_stat_data': tp.gen_stats_data(),
+    try:
+        text = tuple(request.args.items())[0][0]
+    except IndexError:
+        return jsonify({'info_field': 'Пожалуйста, введите текст'})
+    else:
+        tp = HtmlTP(text)
+        return jsonify({'gen_stat_data': tp.gen_stats_data(),
                         'gen_stat_data_with_punct': tp.gen_stats_with_punct(),
                         'gen_stat_data_wo_punct': tp.gen_stats_wo_punct(),
                         'pos_stat_table': tp.pos_freq(),
@@ -35,8 +37,17 @@ def process():
                         'verb_forms_analysis_number_table': tp.verb_form_analysis_number_table(),
                         'summ_text': tp.summary(),
                         })
+
+
+@app.route('/morph')
+def morph():
+    try:
+        text = tuple(request.args.items())[0][0]
+    except IndexError:
+        return jsonify({'info_field': 'Пожалуйста, введите текст'})
     else:
-        return
+        tp = HtmlTP(text)
+        return jsonify({'morph_analysis_table': tp.morhp_analysis(include_punct=True)})
 
 
 if __name__ == '__main__':

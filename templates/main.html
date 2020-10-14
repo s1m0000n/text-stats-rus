@@ -12,6 +12,8 @@
             <label for="textarea" class="lead">Введите ваш текст</label>
             <textarea class="form-control" id="textarea" rows="4"
                       placeholder="Предрассветная дымка нехотя отступала по оврагам. Последние капли сна упали в чашку ароматного кофе..."></textarea>
+            <p id="info_field" class="mt-2"></p>
+            <h3 class="mt-2">Статистический анализ</h3>
             <div class="d-flex justify-content-end mt-2">
                 <button id="process_btn" class="btn btn-primary" onclick='
                 this_btn = document.getElementById("process_btn")
@@ -19,21 +21,32 @@
                 document.getElementById("progress_bar").hidden = false
                     $.ajax({url: "process", datatype: "text", data: $("#textarea").val(),
                         success: function(data) {
+                        if ("info_field" in data){
+                            for(var key in data){
+                                document.getElementById(key).innerHTML = data[key];
+                            }
+                            document.getElementById("results").hidden = true
+                            this_btn.hidden = false
+                            document.getElementById("progress_bar").hidden = true
+                        } else {
                             document.getElementById("results").hidden = false
                             for(var key in data){
                                 document.getElementById(key).innerHTML = data[key];
+                            }
+                            document.getElementById("info_field").innerHTML = ""
                             this_btn.hidden = false
                             document.getElementById("progress_bar").hidden = true
-                            }
-                     }})'>Обработать
+                        }
+                     }})'>Анализировать
                 </button>
-                <div id="progress_bar" hidden><div class="spinner-border text-primary" role="status">
-  <span class="sr-only">Loading...</span>
-</div></div>
+                <div id="progress_bar" hidden>
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
             <div id="results" hidden>
                 <div id="stats" class="mt-4">
-                    <h3>Статистический анализ</h3>
                     <div id="gen_stat" class="mt-2">
                         <h5>Общая статистика</h5>
                         <div id="gen_stat_data"></div>
@@ -78,23 +91,50 @@
                     </div>
                 </div>
                 <div id="other">
-                    <h3>Прочие данные о тексте</h3>
                     <div id="summarization">
-<!--                        <h5>Топ 10 самых информативных предложений</h5>-->
-<!--                        <p>На основе частотности лемм</p>-->
-<!--                        <div id="top_sents"></div>-->
-                        <h5>Простейший квазиреферат</h5>
-                        <p>20% предложений текста, на основе частотности лемм</p>
+                        <h5>Статистический квазиреферат</h5>
+                        <p>Топ 20% предложений текста, на основе частотности лемм</p>
                         <p id="summ_text"></p>
                     </div>
                 </div>
-                <div id="morph_analysis" class="mt-4">
-                    <h3>Морфологический анализ</h3>
-                    <div id="morph_analysis_table"></div>
-                    <div class="mt-2">
-                        <a href="https://github.com/olesar/ruUD/blob/master/conversion/RussianUD_XPOSlist.md">Теги
-                            частей речи согласно Universal Dependencies</a>
+            </div>
+            <div id="morph_analysis" class="mt-4">
+                <h3>Морфологический анализ</h3>
+                <div class="d-flex justify-content-end mt-2">
+                    <button id="generate_morph" class="btn btn-primary" onclick='
+                        document.getElementById("morph_generation_spinner").hidden = false
+                        document.getElementById("generate_morph").hidden = true
+                                            $.ajax({url: "morph", datatype: "text", data: $("#textarea").val(),
+                        success: function(data) {
+                            if ("info_field" in data){
+                                for(var key in data){
+                                    document.getklementById(key).innerHTML = data[key];
+                                }
+                                document.getElementById("morph_analysis_table").hidden = true
+                                document.getElementById("morph_generation_spinner").hidden = true
+                                document.getElementById("generate_morph").hidden = false
+                            }
+                            else {
+                                for(var key in data){
+                                    document.getElementById(key).innerHTML = data[key];
+                                }
+                                document.getElementById("morph_analysis_table").hidden = false
+                                document.getElementById("morph_generation_spinner").hidden = true
+                                document.getElementById("generate_morph").hidden = false
+                                document.getElementById("info_field").innerHTML = ""
+                            }
+                     }})'>Сгенерировать таблицу
+                    </button>
+                    <div id="morph_generation_spinner" hidden>
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
+                </div>
+                <div id="morph_analysis_table" class="mt-2"></div>
+                <div class="mt-2">
+                    <a href="https://github.com/olesar/ruUD/blob/master/conversion/RussianUD_XPOSlist.md">Теги
+                        частей речи согласно Universal Dependencies</a>
                 </div>
             </div>
         </div>
