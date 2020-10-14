@@ -67,7 +67,7 @@ class TextProcessing:
     def unique_token_usages(self):
         return tuple(set(self.token_usages()))
 
-    def omon_freq_compute(self, include_stopwords=True):
+    def omonyms_freq_compute(self, include_stopwords=True):
         wu = self.word_usages() if include_stopwords else sw_filter(self.word_usages())
         wu_repeats = {i: wu.count(i) for i in wu}
         res = []
@@ -145,7 +145,7 @@ class TextProcessing:
 
     def simple_summarization(self, top = None):
         if top is None:
-            top = len(self.doc.sents)*0.15
+            top = len(self.doc.sents)*0.20
             if top < 1:
                 top = 1
             else:

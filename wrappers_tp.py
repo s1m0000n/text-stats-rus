@@ -152,7 +152,7 @@ class HtmlTP(TextProcessing):
 
     def omon_freq(self, top=None, include_stopwords=True):
         processed_freqs = tuple((t[0], str(t[1]), str(t[2]) + '%') for t in
-                           sorted(self.omon_freq_compute(include_stopwords), key=lambda x: x[1], reverse=True))
+                           sorted(self.omonyms_freq_compute(include_stopwords), key=lambda x: x[1], reverse=True))
         if top is not None:
             processed_freqs = processed_freqs[:top]
         return table_to_html(('Словоформа', 'Абсолютная частота', 'Относительная частота'), processed_freqs)
