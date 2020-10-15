@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
+def main():
     return render_template('main.html')
 
 
@@ -33,6 +33,8 @@ def process():
                         'verb_forms_analysis_tense_table': tp.verb_form_analysis_tense_table(),
                         'verb_forms_analysis_person_table': tp.verb_form_analysis_person_table(),
                         'verb_forms_analysis_number_table': tp.verb_form_analysis_number_table(),
+                        'ner_general': tp.ner_stats_view(),
+                        'ner_tables': tp.top_ners_table(),
                         })
 
 

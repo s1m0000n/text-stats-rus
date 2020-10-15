@@ -7,6 +7,11 @@ from text_processing import TextProcessing, pos_name_to_rus, cases_translation
 td = lambda s: f'<td>{s}</td>'
 p = lambda s: f'<p>{s}</p>'
 br = lambda s: f'{s}<br>'
+translate_ner = {
+    'LOC': 'Локация',
+    'ORG': 'Организация',
+    'PER': 'Личность'
+}
 translation_keys = {
     'Animacy': 'Одушевлённость',
     'Case': 'Падеж',
@@ -152,16 +157,16 @@ class HtmlTP(TextProcessing):
 
     def omon_freq(self, top=None, include_stopwords=True):
         processed_freqs = tuple((t[0], str(t[1]), str(t[2]) + '%') for t in
-                           sorted(self.omonyms_freq_compute(include_stopwords), key=lambda x: x[1], reverse=True))
+                                sorted(self.omonyms_freq_compute(include_stopwords), key=lambda x: x[1], reverse=True))
         if top is not None:
             processed_freqs = processed_freqs[:top]
         return table_to_html(('Словоформа', 'Абсолютная частота', 'Относительная частота'), processed_freqs)
 
     def case_analysis_table(self):
         processed_freqs = tuple((cases_translation[t[0]],
-                            str(t[1]), str(t[2]) + '%',
-                            str(t[3]), str(t[4]) + '%',
-                            str(t[5]), str(t[6]) + '%') for t in self.case_analysis())
+                                 str(t[1]), str(t[2]) + '%',
+                                 str(t[3]), str(t[4]) + '%',
+                                 str(t[5]), str(t[6]) + '%') for t in self.case_analysis())
         return table_to_html(
             ('Падеж', 'abs(сущ.+им.собств.)', 'rel(сущ.+им.собств.)', 'abs(прилагательные)',
              'rel(прилагательные)', '&#8721; abs', '&#8721; rel'), processed_freqs)
@@ -211,6 +216,18 @@ class HtmlTP(TextProcessing):
     def summary(self):
         return ' '.join(self.simple_summarization())
 
-    def top_sents(self, top=10):
-        sents = tuple((s,) for s in self.simple_summarization(top))
-        return table_to_html(('Предложение',), sents)
+    def ner_stats_view(self):
+        res = ''
+        ner_stats = self.ner_stats()
+        for stat in (f'Личности: {ner_stats[0]}',
+                     f'Локации: {ner_stats[1]}',
+                     f'Организации: {ner_stats[2]}'):
+            res += br(stat)
+        return p(res)
+
+    def top_ners_table(self):
+        pers, locs, orgs = self.top_ners()
+        h = ('Начальная форма', 'Количество')
+        return p('Личности') + table_to_html(h, pers) + \
+               p('Локации') + table_to_html(h, locs) + \
+               p('Организации') + table_to_html(h, orgs)
